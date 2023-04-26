@@ -10,22 +10,29 @@ func main() {
 		"data/payment/cvv",
 	}
 
-	fmt.Println("JSON ===============")
-	values, err := ExtractPathValues(SampleJSON, PayloadJSON, paths)
-	if err != nil {
-		panic(err)
-	}
-	for _, value := range values {
-		fmt.Println(value)
+	payloads := []struct {
+		Body string
+		Kind Payload
+	}{
+		{
+			Body: SampleJSON,
+			Kind: PayloadJSON,
+		},
+		{
+			Body: SampleXML,
+			Kind: PayloadXML,
+		},
 	}
 
-	fmt.Println()
-	fmt.Println("XML ================")
-	values, err = ExtractPathValues(SampleXML, PayloadXML, paths)
-	if err != nil {
-		panic(err)
-	}
-	for _, value := range values {
-		fmt.Println(value)
+	for _, payload := range payloads {
+		fmt.Printf("Extracting %s =========\n", payload.Kind)
+		values, err := ExtractPathValues(payload.Body, payload.Kind, paths)
+		if err != nil {
+			panic(err)
+		}
+		for _, value := range values {
+			fmt.Println(value)
+		}
+		fmt.Println()
 	}
 }
